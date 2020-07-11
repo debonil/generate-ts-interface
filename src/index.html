@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+
+<body>
+
+  <h1>Convert To Typescript Interface</h1>
+
+  <form action="/action_page.php">
+    <textarea id="w3review" name="w3review" rows="12" cols="80" onchange="cticall()"
+      placeholder="JSON String as Input"></textarea>
+    <textarea id="result" name="w3review2" rows="12" cols="80"
+      placeholder="Output TS Interface will be here..."></textarea>
+    <br><br>
+  </form>
+
+</body>
+<script>
+  function cti(temp1) {
+    console.log(temp1);
+    let str = '{\n';
+    // tslint:disable-next-line:forin
+    for (const x in temp1) {
+      if (typeof temp1[x] !== 'object') {
+        str += x + ':    ' + typeof temp1[x] + '; // ' + temp1[x] + '\n';
+      } else {
+        if (temp1[x] === null) {
+          str += x + ':    string; // ' + temp1[x] + '\n';
+        } else {
+          if (Array.isArray(temp1[x])) {
+            str += x + ':    ' + cti(temp1[x][0]) + '[]; // ' + temp1[x] + '\n';
+          } else {
+            str += x + ':    ' + cti(temp1[x]) + '; // ' + temp1[x] + '\n';
+          }
+        }
+      }
+    }
+    str += '}';
+    return str;
+  }
+
+  function cticall(temp1) {
+
+    temp1 = JSON.parse(document.getElementById('w3review').value);
+    document.getElementById('result').value = cti(temp1);
+  }
+</script>
+
+</html>
