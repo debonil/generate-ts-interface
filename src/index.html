@@ -15,21 +15,22 @@
 
 </body>
 <script>
-  function cti(temp1) {
-    console.log(temp1);
-    let str = '{\n';
+  function cti(temp1, dep = 1) {
+    console.log(temp1, dep);
+    let str = '{\n' + '\t'.repeat(dep);
     // tslint:disable-next-line:forin
     for (const x in temp1) {
       if (typeof temp1[x] !== 'object') {
-        str += x + ':    ' + typeof temp1[x] + '; // ' + temp1[x] + '\n';
+        str += x + ':    ' + typeof temp1[x] + '; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
       } else {
         if (temp1[x] === null) {
-          str += x + ':    string; // ' + temp1[x] + '\n';
+          str += x + ':    string; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
         } else {
+          console.log('Array.isArray(temp1[x])==>', Array.isArray(temp1[x]), temp1[x]);
           if (Array.isArray(temp1[x])) {
-            str += x + ':    ' + cti(temp1[x][0]) + '[]; // ' + temp1[x] + '\n';
+            str += x + ':    ' + cti(temp1[x][0], dep + 1) + '[]; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
           } else {
-            str += x + ':    ' + cti(temp1[x]) + '; // ' + temp1[x] + '\n';
+            str += x + ':    ' + cti(temp1[x], dep + 1) + '; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
           }
         }
       }
@@ -41,7 +42,7 @@
   function cticall(temp1) {
 
     temp1 = JSON.parse(document.getElementById('w3review').value);
-    document.getElementById('result').value = cti(temp1);
+    document.getElementById('result').value = 'export  interface  INTERFACE_NAME  ' + cti(temp1);
   }
 </script>
 
