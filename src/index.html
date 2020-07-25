@@ -15,27 +15,33 @@
 
 </body>
 <script>
+  function elipsis(x) {
+    if (x) {
+      const str = x.toString();
+      return str.length > 20 ? str.substr(0, 20) + ' ...' : str;
+    } else {
+      return x;
+    }
+  }
   function cti(temp1, dep = 1) {
-    console.log(temp1, dep);
-    let str = '{\n' + '\t'.repeat(dep);
-    // tslint:disable-next-line:forin
-    for (const x in temp1) {
-      if (typeof temp1[x] !== 'object') {
-        str += x + ':    ' + typeof temp1[x] + '; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
+    let str = '';
+    if (typeof temp1 !== 'object') {
+      str += typeof temp1;
+    } else {
+      if (temp1 === null) {
+        str += 'string';
       } else {
-        if (temp1[x] === null) {
-          str += x + ':    string; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
+        if (Array.isArray(temp1)) {
+          str += cti(temp1[0], dep + 1) + '[]';
         } else {
-          console.log('Array.isArray(temp1[x])==>', Array.isArray(temp1[x]), temp1[x]);
-          if (Array.isArray(temp1[x])) {
-            str += x + ':    ' + cti(temp1[x][0], dep + 1) + '[]; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
-          } else {
-            str += x + ':    ' + cti(temp1[x], dep + 1) + '; // ' + temp1[x] + '\n' + '\t'.repeat(dep);
+          str += '{\n' + '\t'.repeat(dep);
+          for (const x in temp1) {
+            str += x + ':    ' + cti(temp1[x], dep + 1) + '; // ' + elipsis(temp1[x]) + '\n' + '\t'.repeat(dep);
           }
+          str += '}';
         }
       }
     }
-    str += '}';
     return str;
   }
 
